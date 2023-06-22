@@ -22,6 +22,9 @@ class WeatherSearchService:
 
         response = await self.api_client.get_lat_long(city=city, state=state)
 
+        if not response:
+            raise Exception("Error getting city lat long")
+
         city_model = City(
             name=city,
             state=state,
