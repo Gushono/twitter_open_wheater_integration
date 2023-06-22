@@ -153,3 +153,7 @@ dmypy.json
 cython_debug/
 
 .idea/
+
+*.db
+test.db-shm
+test.db-wal
