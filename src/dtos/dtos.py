@@ -11,6 +11,7 @@ class CityInfoBody(BaseModel):
         schema_extra = {
             "example": {
                 "city": "Campinas",
+                "state": "SP"
             }
         }
 
