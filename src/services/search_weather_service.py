@@ -41,7 +41,7 @@ class WeatherSearchService:
             long=city_lat_long.long
         )
 
-        grouped_temperatures = self._group_temperatures_for_next_five_days(
+        grouped_temperatures = await self._group_temperatures_for_next_five_days(
             weathers=next_five_days_weather["list"]
         )
 
@@ -55,7 +55,7 @@ class WeatherSearchService:
         return weather_information
 
     @staticmethod
-    def _group_temperatures_for_next_five_days(weathers: list[dict]) -> dict[str, list[WeatherDescription]]:
+    async def _group_temperatures_for_next_five_days(weathers: list[dict]) -> dict[str, list[WeatherDescription]]:
         grouped_temperatures = {}
 
         for weather in weathers:

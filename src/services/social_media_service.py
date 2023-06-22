@@ -5,7 +5,7 @@ from src.adapters.twitter_client import TwitterClient
 
 class SocialMediaService(ABC):
 
-    async def publish(self, message: str) -> bool:
+    async def publish(self, message: str) -> bool:  # pragma: no cover
         raise NotImplementedError
 
 
