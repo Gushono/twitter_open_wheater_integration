@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 
 from src.dtos.dtos import CityInfoBody, CityLatLong
-from src.exceptions.client_exceptions import NotAuthorizedException
+from src.exceptions.client_exceptions import NotAuthorizedException, TwitterSendMessageException
 from src.services.search_weather_service import WeatherSearchService
 from src.services.social_media_service import TwitterService
 
@@ -27,6 +27,10 @@ async def post_weather_on_twitter(city_info_body: CityInfoBody):
 
     except NotAuthorizedException:
         raise HTTPException(status_code=401, detail="Unauthorized")
+    except TwitterSendMessageException:
+        raise HTTPException(status_code=422, detail="Error sending message to twitter")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 def format_tweet_message(weather_information: dict[dict], city_name: str):
