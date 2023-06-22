@@ -7,6 +7,10 @@ authors = ["Gustavo Honorato Nicolau <46831966+Gushono@users.noreply.github.com>
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.97.0"
+uvicorn = "^0.22.0"
+httpx = "^0.24.1"
+tortoise-orm = "^0.19.3"
+tweepy = "^4.14.0"
 
 [tool.poetry.dev-dependencies]
 
