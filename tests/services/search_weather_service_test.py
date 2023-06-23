@@ -5,8 +5,7 @@ import pytest
 from src.adapters.weathermap_client import WeatherSearchClient
 from src.dtos.dtos import CityLatLong, WeatherDescription
 from src.models.city import City
-from src.services.search_weather_service import WeatherSearchService
-from src.services.search_weather_service import calculate_average_temp_for_day
+from src.services.search_weather_service import WeatherSearchService, calculate_average_temp_for_day
 
 
 @pytest.fixture
@@ -69,11 +68,11 @@ async def test_get_city_lat_long_existing_city(weather_search_service, mock_city
     mock_weather_search_client.get_lat_long.return_value = []
     City.get_or_none = AsyncMock(return_value=mock_city)
 
-    city = "Test City"
-    state = "Test State"
+    city = "test city"
+    state = "test state"
     result = await weather_search_service.get_city_lat_long(city, state)
 
-    City.get_or_none.assert_called_once_with(name=city.strip(), state=state.strip().lower())
+    City.get_or_none.assert_called_once_with(name=city.strip().lower(), state=state.strip().lower())
     mock_weather_search_client.get_lat_long.assert_not_called()
     assert result == CityLatLong.parse_obj(mock_city.to_dict())
 
@@ -83,13 +82,13 @@ async def test_get_city_lat_long_not_existing_city(weather_search_service, mock_
     mock_weather_search_client.get_lat_long.return_value = []
     City.get_or_none = AsyncMock(return_value=None)
 
-    city = "Test City"
-    state = "Test State"
+    city = "test city"
+    state = "test state"
 
     with pytest.raises(Exception):
         await weather_search_service.get_city_lat_long(city, state)
 
-    City.get_or_none.assert_called_once_with(name=city.strip(), state=state.strip().lower())
+    City.get_or_none.assert_called_once_with(name=city.strip().lower(), state=state.strip().lower())
     mock_weather_search_client.get_lat_long.assert_called_once()
 
 
@@ -100,7 +99,7 @@ async def test_get_city_lat_long_new_city(weather_search_service, mock_weather_s
     City.save = AsyncMock()
 
     city = "Test City"
-    state = "Test State"
+    state = "test state"
     result = await weather_search_service.get_city_lat_long(city, state)
 
     City.get_or_none.assert_called_once_with(name=city.strip(), state=state.strip().lower())
