@@ -1,0 +1,2 @@
+class WeatherSearchException(Exception):
+    pass
