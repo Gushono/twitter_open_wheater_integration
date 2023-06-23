@@ -9,6 +9,13 @@ from src.exceptions.search_weather_service_exceptions import \
 from src.models.city import City
 
 
+def calculate_average_temp_for_day(
+        weather_description: list[WeatherDescription],
+) -> float:
+    temperatures = [description.temperature for description in weather_description]
+    return int(sum(temperatures) / len(temperatures))
+
+
 class WeatherSearchService:
     def __init__(self, api_client: WeatherSearchClient = None):
         self.api_client = api_client or OpenWeatherMapAPIClient()
@@ -35,7 +42,7 @@ class WeatherSearchService:
         return CityLatLong.parse_obj(city_model.to_dict())
 
     async def get_median_temperature_for_next_five_days(
-        self, city_lat_long: CityLatLong
+            self, city_lat_long: CityLatLong
     ) -> Optional[dict]:
         next_five_days_weather = await self.api_client.get_weather_for_next_five_days(
             lat=city_lat_long.lat, long=city_lat_long.long
@@ -48,7 +55,7 @@ class WeatherSearchService:
         weather_information = {}
         for day_month_key, weather_description in grouped_temperatures.items():
             weather_information[day_month_key] = {
-                "average_temp": self.calculate_average_temp_for_day(
+                "average_temp": calculate_average_temp_for_day(
                     weather_description
                 ),
                 "description": weather_description[0].weather_description,
@@ -57,15 +64,8 @@ class WeatherSearchService:
         return weather_information
 
     @staticmethod
-    def calculate_average_temp_for_day(
-        weather_description: list[WeatherDescription],
-    ) -> float:
-        temperatures = [description.temperature for description in weather_description]
-        return sum(temperatures) / len(temperatures)
-
-    @staticmethod
     async def _group_temperatures_for_next_five_days(
-        weathers: list[dict],
+            weathers: list[dict],
     ) -> dict[str, list[WeatherDescription]]:
         grouped_temperatures = {}
 
