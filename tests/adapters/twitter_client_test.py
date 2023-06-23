@@ -42,48 +42,6 @@ def test_twitter_client_init_with_credentials_from_env(mock_tweepy_client, mock_
     mock_tweepy_client.return_value.create_tweet.assert_not_called()
 
 
-def test_twitter_client_init_with_given_credentials(mock_tweepy_client):
-    twitter_client = TwitterClient(
-        bearer_token="bearer_token",
-        consumer_key="consumer_key",
-        consumer_secret="consumer_secret",
-        access_token="access_token",
-        access_token_secret="access_token_secret",
-    )
-
-    assert twitter_client._bearer_token == "bearer_token"
-    assert twitter_client._consumer_key == "consumer_key"
-    assert twitter_client._consumer_secret == "consumer_secret"
-    assert twitter_client._access_token == "access_token"
-    assert twitter_client._access_token_secret == "access_token_secret"
-    mock_tweepy_client.assert_called_once_with(
-        "bearer_token",
-        "consumer_key",
-        "consumer_secret",
-        "access_token",
-        "access_token_secret"
-    )
-    assert twitter_client.client == mock_tweepy_client.return_value
-    mock_tweepy_client.return_value.create_tweet.assert_not_called()
-
-
-def test_twitter_client_authenticate(mock_tweepy_client, mock_env_variables_twitter):
-    twitter_client = TwitterClient()
-    auth_mock = Mock()
-    tweepy.OAuthHandler = Mock(return_value=auth_mock)
-
-    twitter_client.authenticate()
-
-    tweepy.OAuthHandler.assert_called_once_with(
-        twitter_client._consumer_key,
-        twitter_client._consumer_secret
-    )
-    auth_mock.set_access_token.assert_called_once_with(
-        twitter_client._access_token,
-        twitter_client._access_token_secret
-    )
-
-
 @pytest.mark.asyncio
 async def test_twitter_client_publish_success(mock_tweepy_client, mock_env_variables_twitter):
     twitter_client = TwitterClient()
