@@ -36,9 +36,8 @@ class TweepyClient(TwitterClient):
         )
 
     async def publish(self, message: str):
-        # success = self.client.create_tweet(text=message)
+        success = self.client.create_tweet(text=message)
         logger.info(f"Publishing message: {message}")
-        success = True
         if not success:
             raise TwitterSendMessageException()
         return success
