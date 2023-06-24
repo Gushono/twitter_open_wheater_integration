@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 import tweepy
 
-from src.adapters.twitter_client import TwitterClient
+from src.adapters.twitter_client import TweepyClient
 from src.exceptions.client_exceptions import TwitterSendMessageException
 
 
@@ -24,7 +24,7 @@ def mock_env_variables_twitter(monkeypatch):
 
 
 def test_twitter_client_init_with_credentials_from_env(mock_tweepy_client, mock_env_variables_twitter):
-    twitter_client = TwitterClient()
+    twitter_client = TweepyClient()
 
     assert twitter_client._bearer_token == "bearer_token"
     assert twitter_client._consumer_key == "consumer_key"
@@ -44,7 +44,7 @@ def test_twitter_client_init_with_credentials_from_env(mock_tweepy_client, mock_
 
 @pytest.mark.asyncio
 async def test_twitter_client_publish_success(mock_tweepy_client, mock_env_variables_twitter):
-    twitter_client = TwitterClient()
+    twitter_client = TweepyClient()
     mock_tweepy_client.return_value.create_tweet.return_value = True
 
     result = await twitter_client.publish("Hello, world!")
@@ -56,7 +56,7 @@ async def test_twitter_client_publish_success(mock_tweepy_client, mock_env_varia
 
 @pytest.mark.asyncio
 async def test_twitter_client_publish_failure(mock_tweepy_client, mock_env_variables_twitter):
-    twitter_client = TwitterClient()
+    twitter_client = TweepyClient()
     mock_tweepy_client.return_value.create_tweet.return_value = False
 
     with pytest.raises(TwitterSendMessageException):
