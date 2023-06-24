@@ -1,11 +1,20 @@
+import logging
 import os
+from abc import ABC
 
 import tweepy
 
 from src.exceptions.client_exceptions import TwitterSendMessageException
 
+logger = logging.getLogger(__name__)
 
-class TwitterClient:
+
+class TwitterClient(ABC):
+    async def publish(self, message: str) -> bool:  # pragma: no cover
+        raise NotImplementedError
+
+
+class TweepyClient(TwitterClient):
     def __init__(self, client: tweepy.Client = None):
         self._bearer_token = os.getenv("TWITTER_BEARER_TOKEN")
         self._consumer_key = os.getenv("TWITTER_CONSUMER_KEY")
@@ -27,7 +36,9 @@ class TwitterClient:
         )
 
     async def publish(self, message: str):
-        success = self.client.create_tweet(text=message)
+        # success = self.client.create_tweet(text=message)
+        logger.info(f"Publishing message: {message}")
+        success = True
         if not success:
             raise TwitterSendMessageException()
         return success
