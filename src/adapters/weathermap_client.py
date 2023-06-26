@@ -23,7 +23,7 @@ class OpenWeatherMapAPIClient(WeatherSearchClient):
     def __init__(self, http_client: httpx.AsyncClient = None):
         self.geo_base_url = "https://api.openweathermap.org/geo/1.0/direct"
         self.data_base_url = "https://api.openweathermap.org/data/2.5/forecast"
-        self.api_key = os.getenv("WEATHER_MAP_API_KEY")
+        self._api_key = os.getenv("WEATHER_MAP_API_KEY")
         self.http_client = http_client or httpx.AsyncClient()
 
     async def get_weather_for_next_five_days(
@@ -34,7 +34,7 @@ class OpenWeatherMapAPIClient(WeatherSearchClient):
             "lon": long,
             "units": "metric",
             "lang": "pt",
-            "appid": self.api_key,
+            "appid": self._api_key,
         }
         response = await self._get(self.data_base_url, params)
         if response.status_code == 200:
@@ -50,7 +50,7 @@ class OpenWeatherMapAPIClient(WeatherSearchClient):
         if state:
             city = f"{city},{state}"
 
-        params = {"q": city, "limit": limit, "appid": self.api_key}
+        params = {"q": city, "limit": limit, "appid": self._api_key}
         response = await self._get(self.geo_base_url, params)
         if response.status_code == 200:
             return response.json()
